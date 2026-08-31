@@ -1,28 +1,20 @@
-# PastorAbayomiBibleStories — Bible Heroes Adventure v2
+# PastorAbayomiBibleStories — Bible Heroes Adventure
 
-A client-side HTML5 Bible learning game for PastorAbayomiBibleStories.
-
-## 10 playable levels
-1. David & Goliath
-2. The Walls of Jericho
-3. Joseph and His Dreams
-4. The Three Hebrew Boys
-5. Daniel in the Lions’ Den
-6. Jonah and the Great Fish
-7. Noah and the Ark
-8. Moses and the Red Sea
-9. Esther’s Courage
-10. The Birth of Jesus
-
-Each level includes an introduction, story-item challenge, Bible knowledge quiz, faith challenge, and Bible lesson. Progress, scores, stars, badges, and sound preference are stored locally in the browser.
+Upgraded visual edition of the 10-level HTML5 Bible game.
 
 ## Files
-- index.html
-- style.css
-- script.js
-- assets/logo.png
+- `index.html` — game screens and interface
+- `style.css` — full game-style visual redesign and responsive layout
+- `script.js` — 10 playable Bible-story levels, challenges, scoring, badges and local progress
+- `assets/logo.png` — PastorAbayomiBibleStories logo
 
-## Deployment
-Static project; suitable for GitHub + Vercel. No build command is required.
+## Run locally
+Open `index.html` in a modern browser.
 
-Live domain target: https://games.pastorabayomibiblestorykids.org
+## Deploy
+Upload/commit the complete folder to the GitHub repository connected to Vercel. Vercel will automatically deploy the new commit.
+
+Custom domain:
+`https://games.pastorabayomibiblestorykids.org`
+
+Progress is stored in browser localStorage under the game's storage key.

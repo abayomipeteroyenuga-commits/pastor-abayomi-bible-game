@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="PastorAbayomiBibleStories: Bible Heroes Adventure - Learn the Word. Play the Story. Become a Bible Hero!">
+  <meta name="theme-color" content="#4A90D9">
+  <title>Bible Heroes Adventure | PastorAbayomiBibleStories</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Audio elements (placeholders - add real files later) -->
+  <audio id="bgMusic" loop preload="none"></audio>
+  <audio id="sfxCorrect" preload="none"></audio>
+  <audio id="sfxWrong" preload="none"></audio>
+  <audio id="sfxClick" preload="none"></audio>
+  <audio id="sfxComplete" preload="none"></audio>
+
+  <!-- HOME SCREEN -->
+  <div id="screen-home" class="screen active">
+    <div class="home-bg">
+      <div class="stars-bg"></div>
+      <div class="home-content">
+        <div class="logo-area">
+          <div class="logo-placeholder">
+            <span class="logo-icon">📖</span>
+            <span class="logo-text">PASTOR ABAYOMI<br>BIBLE STORIES</span>
+          </div>
+          <p class="logo-note"></p>
+        </div>
+        <h1 class="game-title">BIBLE HEROES<br>ADVENTURE</h1>
+        <p class="tagline">Learn the Word. Play the Story. Become a Bible Hero!</p>
+        <p class="welcome">Welcome, young Bible Hero! Journey through amazing stories of faith, courage, and God's love.</p>
+        
+        <div class="home-buttons">
+          <button class="btn btn-play" id="btn-play">▶ PLAY GAME</button>
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="btn-howto">HOW TO PLAY</button>
+            <button class="btn btn-secondary" id="btn-stories">BIBLE STORIES</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="btn-achievements">🏆 ACHIEVEMENTS</button>
+            <button class="btn btn-secondary" id="btn-parent">👨‍👩‍👧 PARENTS</button>
+          </div>
+        </div>
+        
+        <div class="home-footer">
+          <button class="btn-icon" id="btn-sound" title="Toggle Sound">🔊</button>
+          <p class="site-link">pastorabiyomibiblestorykids.org</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL SELECT SCREEN -->
+  <div id="screen-levels" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-goto="home">← Home</button>
+      <h2>Choose Your Adventure</h2>
+      <div class="header-stats">
+        <span id="total-score">⭐ 0</span>
+      </div>
+    </div>
+    <div class="levels-container">
+      <div class="level-card unlocked" data-level="1">
+        <div class="level-num">1</div>
+        <div class="level-icon">🏹</div>
+        <h3>David & Goliath</h3>
+        <p>Trust God and be brave</p>
+        <div class="level-stars" id="stars-1">☆☆☆</div>
+        <span class="level-status">PLAY</span>
+      </div>
+      <div class="level-card locked" data-level="2">
+        <div class="level-num">2</div>
+        <div class="level-icon">🏛️</div>
+        <h3>Walls of Jericho</h3>
+        <p>Obey and shout for victory</p>
+        <div class="level-stars" id="stars-2">☆☆☆</div>
+        <span class="level-status">🔒</span>
+      </div>
+      <div class="level-card locked" data-level="3">
+        <div class="level-num">3</div>
+        <div class="level-icon">🌈</div>
+        <h3>Joseph & Dreams</h3>
+        <p>God has a purpose</p>
+        <div class="level-stars" id="stars-3">☆☆☆</div>
+        <span class="level-status">🔒</span>
+      </div>
+      <div class="level-card locked" data-level="4">
+        <div class="level-num">4</div>
+        <div class="level-icon">🔥</div>
+        <h3>Hebrew Boys</h3>
+        <p>Stand firm in faith</p>
+        <div class="level-stars" id="stars-4">☆☆☆</div>
+        <span class="level-status">🔒</span>
+      </div>
+      <div class="level-card locked" data-level="5">
+        <div class="level-num">5</div>
+        <div class="level-icon">🦁</div>
+        <h3>Daniel & Lions</h3>
+        <p>Pray and trust God</p>
+        <div class="level-stars" id="stars-5">☆☆☆</div>
+        <span class="level-status">🔒</span>
+      </div>
+      <div class="level-card locked" data-level="6">
+        <div class="level-num">6</div>
+        <div class="level-icon">🐋</div>
+        <h3>Jonah & Fish</h3>
+        <p>Obey God's call</p>
+        <div class="level-stars" id="stars-6">☆☆☆</div>
+        <span class="level-status">🔒</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <button class="btn-back" id="btn-quit-level">← Quit</button>
+      <div class="game-progress">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <span id="challenge-indicator">Challenge 1/4</span>
+      </div>
+      <div class="game-score">
+        <span id="game-score">0</span> pts
+        <span id="game-stars">⭐0</span>
+      </div>
+    </div>
+    <div id="game-content" class="game-content">
+      <!-- Dynamic content injected by JS -->
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="screen-results" class="screen">
+    <div class="results-content">
+      <div class="results-celebration" id="results-celebration">🎉</div>
+      <h2 id="results-title">LEVEL COMPLETE!</h2>
+      <div class="results-stars" id="results-stars">⭐⭐⭐</div>
+      <p class="results-score">Score: <strong id="results-score-val">0</strong></p>
+      <div class="badge-earned" id="badge-earned">
+        <span class="badge-icon">🏅</span>
+        <span id="badge-name">DAVID THE BRAVE</span>
+      </div>
+      <p class="results-lesson" id="results-lesson"></p>
+      <div class="results-buttons">
+        <button class="btn btn-play" id="btn-next-level">PLAY NEXT LEVEL</button>
+        <button class="btn btn-secondary" id="btn-replay">PLAY AGAIN</button>
+        <button class="btn btn-secondary" id="btn-results-home">BACK TO HOME</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO PLAY -->
+  <div id="screen-howto" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-goto="home">← Home</button>
+      <h2>How to Play</h2>
+    </div>
+    <div class="info-content">
+      <div class="info-card">
+        <h3>🎯 Your Mission</h3>
+        <p>Travel through famous Bible stories. Complete challenges, answer questions, and learn how heroes of the Bible trusted God!</p>
+      </div>
+      <div class="info-card">
+        <h3>⭐ Earn Stars & Points</h3>
+        <p>Answer correctly and complete challenges to earn points and stars. Get 3 stars by doing your best!</p>
+      </div>
+      <div class="info-card">
+        <h3>🏅 Collect Badges</h3>
+        <p>Finish each level to unlock special Bible Hero badges. Become a true Bible Hero!</p>
+      </div>
+      <div class="info-card">
+        <h3>🔓 Unlock Levels</h3>
+        <p>Complete a level to unlock the next adventure. Keep going until you finish all the stories!</p>
+      </div>
+      <div class="info-card">
+        <h3>🔊 Sound</h3>
+        <p>Tap the sound button anytime to turn music and sounds on or off.</p>
+      </div>
+      <button class="btn btn-play" data-goto="home">GOT IT!</button>
+    </div>
+  </div>
+
+  <!-- BIBLE STORIES -->
+  <div id="screen-stories" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-goto="home">← Home</button>
+      <h2>Bible Stories</h2>
+    </div>
+    <div class="info-content">
+      <div class="story-card">
+        <span class="story-icon">🏹</span>
+        <div>
+          <h3>David & Goliath</h3>
+          <p>A young shepherd boy trusts God and faces a giant warrior. (1 Samuel 17)</p>
+        </div>
+      </div>
+      <div class="story-card">
+        <span class="story-icon">🏛️</span>
+        <div>
+          <h3>The Walls of Jericho</h3>
+          <p>Joshua and the Israelites obey God and see the walls fall. (Joshua 6)</p>
+        </div>
+      </div>
+      <div class="story-card">
+        <span class="story-icon">🌈</span>
+        <div>
+          <h3>Joseph and His Dreams</h3>
+          <p>God gives Joseph dreams and a special purpose, even in hard times. (Genesis 37–50)</p>
+        </div>
+      </div>
+      <div class="story-card">
+        <span class="story-icon">🔥</span>
+        <div>
+          <h3>The Three Hebrew Boys</h3>
+          <p>Shadrach, Meshach, and Abednego stand firm and trust God in the fire. (Daniel 3)</p>
+        </div>
+      </div>
+      <div class="story-card">
+        <span class="story-icon">🦁</span>
+        <div>
+          <h3>Daniel in the Lions’ Den</h3>
+          <p>Daniel keeps praying to God and is kept safe from the lions. (Daniel 6)</p>
+        </div>
+      </div>
+      <div class="story-card">
+        <span class="story-icon">🐋</span>
+        <div>
+          <h3>Jonah and the Great Fish</h3>
+          <p>Jonah learns to obey God after a big adventure in the sea. (Jonah 1–3)</p>
+        </div>
+      </div>
+      <button class="btn btn-play" data-goto="home">BACK HOME</button>
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div id="screen-achievements" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-goto="home">← Home</button>
+      <h2>Achievements</h2>
+    </div>
+    <div class="info-content">
+      <p class="ach-intro">Collect all the Bible Hero badges!</p>
+      <div class="badges-grid" id="badges-grid">
+        <!-- Populated by JS -->
+      </div>
+      <div class="stats-box">
+        <p>Total Score: <strong id="ach-total-score">0</strong></p>
+        <p>Levels Completed: <strong id="ach-levels">0</strong> / 6</p>
+        <p>Stars Earned: <strong id="ach-stars">0</strong> / 18</p>
+      </div>
+      <button class="btn btn-play" data-goto="home">BACK HOME</button>
+    </div>
+  </div>
+
+  <!-- PARENT / TEACHER -->
+  <div id="screen-parent" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-goto="home">← Home</button>
+      <h2>For Parents & Teachers</h2>
+    </div>
+    <div class="info-content">
+      <div class="info-card">
+        <h3>📖 What Children Learn</h3>
+        <ul>
+          <li>Bible knowledge and key stories</li>
+          <li>Faith and trust in God</li>
+          <li>Courage and bravery</li>
+          <li>Obedience to God</li>
+          <li>Biblical character and values</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>🛡️ Safe & Educational</h3>
+        <p>This game is designed for children and families. No ads, no in-app purchases, no personal data collection. Progress is saved only on the device using browser storage.</p>
+      </div>
+      <div class="info-card">
+        <h3>🏠 About PastorAbayomiBibleStories</h3>
+        <p>Helping children learn the Word of God through fun, interactive stories and games.</p>
+        <p><strong>Website:</strong> <a href="https://pastorabiyomibiblestorykids.org" target="_blank" rel="noopener">pastorabiyomibiblestorykids.org</a></p>
+      </div>
+      <div class="info-card">
+        <h3>💡 Tips</h3>
+        <p>Play together! Talk about the lessons after each level. Encourage children to retell the stories in their own words.</p>
+      </div>
+      <button class="btn btn-play" data-goto="home">BACK HOME</button>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+```
+
+MASTER PROMPT — PASTOR ABAYOMI BIBLE STORIES WEB GAME Build a complete, polished, playable HTML5 web game called “PastorAbayomiBibleStories: Bible Heroes Adventure.” This is an educational Christian B - Grok

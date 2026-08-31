@@ -1046,3 +1046,8 @@ MASTER PROMPT — PASTOR ABAYOMI BIBLE STORIES WEB GAME Build a complete, polish
 @media (max-width: 600px) {
   .official-logo img { max-width: 92vw; max-height: 220px; }
 }
+
+/* Version 2 branding/layout refinements */
+.brand-logo { display:block; width:min(260px,70vw); max-height:120px; object-fit:contain; margin:0 auto; }
+.logo-placeholder { display:flex; justify-content:center; align-items:center; min-height:90px; }
+.levels-container { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }

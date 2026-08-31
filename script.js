@@ -1,184 +1,65 @@
-/* ============================================================
-   PastorAbayomiBibleStories — Bible Heroes Adventure
-   Version 1.1 — Client-side educational Bible game
-   ============================================================ */
+/* PastorAbayomiBibleStories — Bible Heroes Adventure
+   Version 2.0 — 10 playable Bible-story levels, client-side */
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'pabs_bible_heroes_v1';
+  const STORAGE_KEY = 'pabs_bible_heroes_v2';
   const defaultState = { unlockedLevel: 1, scores: {}, stars: {}, badges: {}, totalScore: 0, soundOn: true };
   let state = loadState();
   let currentLevel = null, currentChallenge = 0, levelScore = 0, levelStars = 0, mistakes = 0;
-  let selectedItems = [], aimAngle = 0, hasFired = false;
 
   const LEVELS = {
-    1: { id:1, title:'David & Goliath', badge:{id:'david',name:'DAVID THE BRAVE',icon:'🏅'}, challenges:5 },
-    2: { id:2, title:'The Walls of Jericho', badge:{id:'jericho',name:'FAITHFUL WARRIOR',icon:'🏅'}, challenges:4, comingSoon:true },
-    3: { id:3, title:'Joseph and His Dreams', badge:{id:'joseph',name:'DREAM KEEPER',icon:'🏅'}, challenges:4, comingSoon:true },
-    4: { id:4, title:'The Three Hebrew Boys', badge:{id:'hebrew',name:'FAITH UNDER FIRE',icon:'🏅'}, challenges:4, comingSoon:true },
-    5: { id:5, title:'Daniel in the Lions’ Den', badge:{id:'daniel',name:'LION’S DEN HERO',icon:'🏅'}, challenges:4, comingSoon:true },
-    6: { id:6, title:'Jonah and the Great Fish', badge:{id:'jonah',name:'GREAT FISH ADVENTURER',icon:'🏅'}, challenges:4, comingSoon:true }
+    1:{title:'David & Goliath',icon:'🏹',badge:{id:'david',name:'DAVID THE BRAVE',icon:'🏹'},intro:'David was a young shepherd who trusted God when Goliath challenged God’s people.',items:[['sling','🪢','Sling',1],['stones','🪨','Smooth Stones',1],['armor','🛡️','Heavy Armor',0],['sword','⚔️','Heavy Sword',0]],quiz:['Who did David face?',['Pharaoh','Goliath','Jonah','Daniel'],1],choice:['What gave David courage?',['His size','His armor','His trust in God','A giant army'],2],lesson:'True courage comes from trusting God. David faced Goliath with faith. 📖 1 Samuel 17'},
+    2:{title:'The Walls of Jericho',icon:'🏰',badge:{id:'jericho',name:'FAITHFUL WARRIOR',icon:'🏰'},intro:'Joshua and the Israelites followed God’s instructions as they came to the fortified city of Jericho.',items:[['trumpets','📯','Trumpets',1],['march','👣','Marching',1],['tank','🚙','Tank',0],['cannon','💣','Cannon',0]],quiz:['What happened to Jericho’s walls?',['They fell','They floated away','They became gold','They grew taller'],0],choice:['What did the Israelites do around Jericho?',['They followed God’s instructions','They built a rocket','They sailed away','They hid for seven days'],0],lesson:'Joshua and the Israelites obeyed God’s instructions. 📖 Joshua 6'},
+    3:{title:'Joseph and His Dreams',icon:'🌈',badge:{id:'joseph',name:'DREAM KEEPER',icon:'🌈'},intro:'Joseph had dreams about his future and learned that God could work through difficult seasons.',items:[['coat','🧥','Special Coat',1],['dream','💭','Dreams',1],['crown','👑','Pharaoh’s Crown',0],['spaceship','🚀','Spaceship',0]],quiz:['What did Joseph receive that became special to him?',['A special coat','A ship','A trumpet','A lion'],0],choice:['What should we remember from Joseph’s story?',['God can have a purpose for our lives','Never forgive anyone','Give up when life is hard','Ignore wise advice'],0],lesson:'Joseph’s story teaches patience, forgiveness, and trust in God’s purpose. 📖 Genesis 37–50'},
+    4:{title:'The Three Hebrew Boys',icon:'🔥',badge:{id:'hebrew',name:'FAITH UNDER FIRE',icon:'🔥'},intro:'Shadrach, Meshach, and Abednego chose to remain faithful to God even when they faced a fiery furnace.',items:[['faith','❤️','Faith in God',1],['courage','🛡️','Courage',1],['idol','🗿','Golden Idol',0],['fear','😨','Giving in to Fear',0]],quiz:['Where were the three Hebrew boys thrown?',['A cave','A fiery furnace','A boat','A palace garden'],1],choice:['What did they choose to do?',['Worship God faithfully','Give up their faith','Run away from everyone','Build a new kingdom'],0],lesson:'They stood firm in faith and trusted God. 📖 Daniel 3'},
+    5:{title:'Daniel in the Lions’ Den',icon:'🦁',badge:{id:'daniel',name:'LION’S DEN HERO',icon:'🦁'},intro:'Daniel continued to pray to God even when a new law made prayer dangerous.',items:[['prayer','🙏','Prayer',1],['window','🪟','Open Window',1],['spear','🔱','Spear',0],['crown','👑','King’s Crown',0]],quiz:['Where was Daniel placed?',['A lion’s den','A boat','A vineyard','A workshop'],0],choice:['What did Daniel keep doing?',['Praying to God','Ignoring God','Hiding his Bible','Building a wall'],0],lesson:'Daniel remained faithful in prayer. 📖 Daniel 6'},
+    6:{title:'Jonah and the Great Fish',icon:'🐋',badge:{id:'jonah',name:'OBEDIENT MESSENGER',icon:'🐋'},intro:'Jonah learned that running away from God’s instruction was not the answer. He eventually obeyed God’s call.',items:[['fish','🐋','Great Fish',1],['prayer','🙏','Prayer',1],['castle','🏰','Castle',0],['train','🚆','Train',0]],quiz:['Where did Jonah try to go instead of obeying God?',['Nineveh','Tarshish','Jerusalem','Bethlehem'],1],choice:['What lesson does Jonah’s story teach?',['Obey God and respond to His call','Never listen','Always run away','Avoid prayer'],0],lesson:'Jonah learned obedience and repentance. 📖 Jonah 1–4'},
+    7:{title:'Noah and the Ark',icon:'🌧️',badge:{id:'noah',name:'ARK BUILDER',icon:'🛶'},intro:'Noah obeyed God and built an ark before the flood, protecting his family and the animals God brought to him.',items:[['ark','🛶','Ark',1],['animals','🐘','Animals',1],['submarine','🚢','Submarine',0],['rocket','🚀','Rocket',0]],quiz:['What did Noah build?',['An ark','A palace','A tower','A temple'],0],choice:['What was Noah known for in this story?',['Obedience to God','Refusing instructions','Building a city','Leading an army'],0],lesson:'Noah’s story highlights faith and obedience. 📖 Genesis 6–9'},
+    8:{title:'Moses and the Red Sea',icon:'🌊',badge:{id:'moses',name:'SEA CROSSER',icon:'🌊'},intro:'Moses led the Israelites out of Egypt. God made a way for them through the Red Sea.',items:[['staff','🪵','Moses’ Staff',1],['sandals','👡','Sandals',1],['computer','💻','Computer',0],['anchor','⚓','Anchor',0]],quiz:['What sea did the Israelites cross?',['Dead Sea','Red Sea','Black Sea','Mediterranean Sea'],1],choice:['What did Moses do when the people were afraid?',['Trusted God’s direction','Abandoned them','Built a spaceship','Returned to Pharaoh'],0],lesson:'God made a way where there seemed to be no way. 📖 Exodus 14'},
+    9:{title:'Esther’s Courage',icon:'👑',badge:{id:'esther',name:'COURAGEOUS QUEEN',icon:'👑'},intro:'Esther courageously used her position as queen to help protect her people.',items:[['crown','👑','Queen’s Crown',1],['courage','💪','Courage',1],['pirate','🏴‍☠️','Pirate Ship',0],['football','⚽','Football',0]],quiz:['What position did Esther have?',['Queen','Shepherd','Soldier','Fisherman'],0],choice:['Why did Esther show courage?',['To help protect her people','To win a race','To build a tower','To find treasure'],0],lesson:'Esther shows courage, wisdom, and willingness to help others. 📖 Esther 4–7'},
+    10:{title:'The Birth of Jesus',icon:'⭐',badge:{id:'jesus',name:'GOOD NEWS HERO',icon:'⭐'},intro:'Jesus was born in Bethlehem. His birth brought a message of hope and good news.',items:[['manger','🪵','Manger',1],['star','⭐','Star',1],['crown','👑','Golden Throne',0],['spaceship','🚀','Spaceship',0]],quiz:['Where was Jesus born?',['Bethlehem','Jericho','Nineveh','Egypt'],0],choice:['What did Jesus’ birth bring?',['Good news and hope','A military battle','A treasure hunt','A new city wall'],0],lesson:'The birth of Jesus is celebrated as good news and great joy. 📖 Luke 2:1–20'},
   };
-  const BADGES = [
-    {id:'david',name:'DAVID THE BRAVE',icon:'🏹',level:1},
-    {id:'jericho',name:'FAITHFUL WARRIOR',icon:'🏛️',level:2},
-    {id:'joseph',name:'DREAM KEEPER',icon:'🌈',level:3},
-    {id:'hebrew',name:'FAITH UNDER FIRE',icon:'🔥',level:4},
-    {id:'daniel',name:'LION’S DEN HERO',icon:'🦁',level:5},
-    {id:'jonah',name:'GREAT FISH ADVENTURER',icon:'🐋',level:6}
-  ];
 
-  const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => document.querySelectorAll(sel);
+  const BADGES = Object.keys(LEVELS).map(k => ({id:LEVELS[k].badge.id,name:LEVELS[k].badge.name,icon:LEVELS[k].badge.icon,level:Number(k)}));
+  const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
 
-  function loadState(){
-    try { const raw=localStorage.getItem(STORAGE_KEY); if(raw) return {...defaultState,...JSON.parse(raw)}; }
-    catch(e) {}
-    return {...defaultState};
-  }
-  function saveState(){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {} }
+  function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)return {...defaultState,...JSON.parse(raw)};}catch(e){}return {...defaultState};}
+  function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+  function showScreen(name){$$('.screen').forEach(s=>s.classList.remove('active'));const el=$(`#screen-${name}`);if(el)el.classList.add('active');if(name==='levels')updateLevelSelect();if(name==='achievements')renderAchievements();}
 
-  function init(){
-    bindEvents(); updateSoundButton(); updateLevelSelect(); showScreen('home');
-  }
-  function showScreen(name){
-    $$('.screen').forEach(s=>s.classList.remove('active'));
-    const screen=$(`#screen-${name}`); if(screen) screen.classList.add('active');
-    if(name==='levels') updateLevelSelect();
-    if(name==='achievements') renderAchievements();
-  }
+  function init(){bindEvents();updateSoundButton();updateLevelSelect();showScreen('home');}
   function bindEvents(){
-    const on=(id,fn)=>{const el=$(id); if(el) el.addEventListener('click',fn);};
-    on('#btn-play',()=>{playSound('click');showScreen('levels');});
-    on('#btn-howto',()=>{playSound('click');showScreen('howto');});
-    on('#btn-stories',()=>{playSound('click');showScreen('stories');});
-    on('#btn-achievements',()=>{playSound('click');showScreen('achievements');});
-    on('#btn-parent',()=>{playSound('click');showScreen('parent');});
-    on('#btn-sound',toggleSound);
-    document.body.addEventListener('click',e=>{const goto=e.target.closest('[data-goto]');if(goto){playSound('click');showScreen(goto.dataset.goto);}});
-    $$('.level-card').forEach(card=>card.addEventListener('click',()=>{
-      const level=parseInt(card.dataset.level,10);
-      if(card.classList.contains('unlocked')){playSound('click');startLevel(level);} else showToast('Complete previous levels to unlock!');
-    }));
-    on('#btn-quit-level',()=>{playSound('click');if(confirm('Leave this level? Progress in this level will be lost.'))showScreen('levels');});
-    on('#btn-next-level',()=>{playSound('click');const next=currentLevel+1;if(next<=6&&state.unlockedLevel>=next)startLevel(next);else showScreen('levels');});
-    on('#btn-replay',()=>{playSound('click');startLevel(currentLevel);});
-    on('#btn-results-home',()=>{playSound('click');showScreen('home');});
+    const on=(id,fn)=>{const el=$(id);if(el)el.addEventListener('click',fn)};
+    on('#btn-play',()=>{playSound('click');showScreen('levels')});
+    on('#btn-howto',()=>{playSound('click');showScreen('howto')}); on('#btn-stories',()=>{playSound('click');showScreen('stories')}); on('#btn-achievements',()=>{playSound('click');showScreen('achievements')}); on('#btn-parent',()=>{playSound('click');showScreen('parent')}); on('#btn-sound',toggleSound);
+    document.body.addEventListener('click',e=>{const g=e.target.closest('[data-goto]');if(g){playSound('click');showScreen(g.dataset.goto)}});
+    $$('.level-card').forEach(card=>card.addEventListener('click',()=>{const n=+card.dataset.level;if(n<=state.unlockedLevel){playSound('click');startLevel(n)}else showToast('Complete the previous level to unlock this adventure!')}));
+    on('#btn-quit-level',()=>{playSound('click');if(confirm('Leave this level? Progress in this level will be lost.'))showScreen('levels')});
+    on('#btn-next-level',()=>{playSound('click');if(currentLevel<10 && state.unlockedLevel>=currentLevel+1)startLevel(currentLevel+1);else showScreen('levels')});
+    on('#btn-replay',()=>{playSound('click');startLevel(currentLevel)}); on('#btn-results-home',()=>{playSound('click');showScreen('home')});
   }
 
-  function toggleSound(){ state.soundOn=!state.soundOn; saveState(); updateSoundButton(); if(state.soundOn) playSound('click'); }
-  function updateSoundButton(){const btn=$('#btn-sound');if(btn)btn.textContent=state.soundOn?'🔊':'🔇';}
   let audioCtx=null;
-  function getAudioCtx(){
-    if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}
-    if(audioCtx.state==='suspended') audioCtx.resume().catch(()=>{}); return audioCtx;
-  }
-  function playTone(freq,duration,type='sine',vol=0.15){
-    if(!state.soundOn)return; const ctx=getAudioCtx(); if(!ctx)return;
-    try{const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=type;osc.frequency.value=freq;gain.gain.setValueAtTime(vol,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+duration);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+duration);}catch(e){}
-  }
-  function playSound(name){
-    if(!state.soundOn)return;
-    if(name==='click')playTone(600,.08,'square',.08);
-    else if(name==='correct'){playTone(523,.12);setTimeout(()=>playTone(659,.15),100);setTimeout(()=>playTone(784,.2),200);}
-    else if(name==='wrong')playTone(200,.25,'sawtooth',.1);
-    else if(name==='complete'){playTone(523,.15);setTimeout(()=>playTone(659,.15),120);setTimeout(()=>playTone(784,.15),240);setTimeout(()=>playTone(1046,.3,'sine',.18),360);}
-  }
+  function getAudioCtx(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}return audioCtx;}
+  function playTone(f,d,t='sine',v=.12){if(!state.soundOn)return;const c=getAudioCtx();if(!c)return;try{const o=c.createOscillator(),g=c.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d)}catch(e){}}
+  function playSound(n){if(!state.soundOn)return;const seq={click:[[600,.08,'square']],correct:[[523,.12],[659,.15],[784,.2]],wrong:[[200,.25,'sawtooth']],complete:[[523,.15],[659,.15],[784,.15],[1046,.3]]}[n]||[];seq.forEach((x,i)=>setTimeout(()=>playTone(x[0],x[1],x[2]||'sine',n==='wrong'?.1:.15),i*110));}
+  function toggleSound(){state.soundOn=!state.soundOn;saveState();updateSoundButton();if(state.soundOn)playSound('click');}
+  function updateSoundButton(){const b=$('#btn-sound');if(b)b.textContent=state.soundOn?'🔊':'🔇';}
 
-  function updateLevelSelect(){
-    $$('.level-card').forEach(card=>{
-      const level=parseInt(card.dataset.level,10), unlocked=level<=state.unlockedLevel;
-      card.classList.toggle('unlocked',unlocked);card.classList.toggle('locked',!unlocked);
-      const status=card.querySelector('.level-status'); if(status)status.textContent=unlocked?(state.stars[level]?'✓ PLAY':'PLAY'):'🔒';
-      const starsEl=$(`#stars-${level}`);if(starsEl){const s=state.stars[level]||0;starsEl.textContent='★'.repeat(s)+'☆'.repeat(3-s);}
-    });
-    const totalEl=$('#total-score');if(totalEl)totalEl.textContent=`⭐ ${state.totalScore}`;
-  }
-  function startLevel(levelId){
-    const level=LEVELS[levelId];if(!level)return;
-    if(level.comingSoon){showComingSoon(level);return;}
-    currentLevel=levelId;currentChallenge=0;levelScore=0;levelStars=0;mistakes=0;selectedItems=[];aimAngle=0;hasFired=false;
-    showScreen('game');updateGameHeader();renderChallenge();
-  }
-  function showComingSoon(level){
-    showScreen('game');currentLevel=level.id;
-    const content=$('#game-content');
-    content.innerHTML=`<div class="narrative"><span class="story-emoji">✨</span><h3>${level.title}</h3><p>This adventure is coming soon! Complete previous levels and check back later.</p><p style="margin-top:1rem;color:var(--text-light);font-size:.9rem;">God has more exciting Bible stories waiting for you!</p><button class="btn btn-continue" id="btn-back-levels">BACK TO LEVELS</button></div>`;
-    $('#btn-back-levels').addEventListener('click',()=>{playSound('click');showScreen('levels');});
-    updateGameHeader(); $('#progress-fill').style.width='0%'; $('#challenge-indicator').textContent='Coming Soon';
-  }
-  function updateGameHeader(){
-    const total=LEVELS[currentLevel]?.challenges||5,pct=(currentChallenge/total)*100;
-    const fill=$('#progress-fill');if(fill)fill.style.width=pct+'%';
-    const ind=$('#challenge-indicator');if(ind)ind.textContent=`Challenge ${Math.min(currentChallenge+1,total)}/${total}`;
-    const score=$('#game-score');if(score)score.textContent=levelScore;
-    const stars=$('#game-stars');if(stars)stars.textContent='⭐'+levelStars;
-  }
-  function renderChallenge(){
-    const content=$('#game-content');if(!content)return;content.innerHTML='';
-    if(currentLevel!==1){showComingSoon(LEVELS[currentLevel]);return;}
-    switch(currentChallenge){case 0:renderIntro();break;case 1:renderItemSelect();break;case 2:renderQuiz();break;case 3:renderSling();break;case 4:renderLesson();break;default:finishLevel();}
-    updateGameHeader();
-  }
-  function renderIntro(){
-    $('#game-content').innerHTML=`<div class="narrative"><span class="story-emoji">🏹</span><h3>David &amp; Goliath</h3><p>Long ago, a young shepherd named <strong>David</strong> heard about a giant warrior named Goliath who challenged God's people.</p><p>Everyone was afraid — but David trusted God. He knew God would help him!</p><p>Are you ready to help David show courage and faith?</p><button class="btn btn-continue" id="btn-start-challenges">LET'S GO! ▶</button></div>`;
-    $('#btn-start-challenges').addEventListener('click',()=>{playSound('click');currentChallenge=1;renderChallenge();});
-  }
-  function renderItemSelect(){
-    selectedItems=[];
-    const items=[{id:'sling',emoji:'🪢',name:'Sling',correct:true},{id:'stones',emoji:'🪨',name:'Smooth Stones',correct:true},{id:'sword',emoji:'⚔️',name:'Heavy Sword',correct:false},{id:'armor',emoji:'🛡️',name:'Big Armor',correct:false},{id:'staff',emoji:'🪵',name:'Shepherd Staff',correct:true},{id:'helmet',emoji:'⛑️',name:'Metal Helmet',correct:false}];
-    $('#game-content').innerHTML=`<div class="challenge-box"><h3>🎒 Choose David's Items</h3><p class="instruction">Tap the things David actually used. He trusted God, not heavy armor!</p><div class="items-grid" id="items-grid"></div><div id="item-feedback"></div><button class="btn btn-continue" id="btn-check-items" disabled>CHECK SELECTION</button></div>`;
-    const grid=$('#items-grid');items.forEach(item=>{const div=document.createElement('div');div.className='item-card';div.dataset.id=item.id;div.dataset.correct=item.correct;div.innerHTML=`<span class="item-emoji">${item.emoji}</span>${item.name}`;div.addEventListener('click',()=>toggleItem(div,item));grid.appendChild(div);});
-    $('#btn-check-items').addEventListener('click',checkItems);
-  }
-  function toggleItem(el,item){playSound('click');if(el.classList.contains('selected')){el.classList.remove('selected');selectedItems=selectedItems.filter(i=>i.id!==item.id);}else{el.classList.add('selected');selectedItems.push(item);}$('#btn-check-items').disabled=selectedItems.length===0;}
-  function checkItems(){
-    const needed=['sling','stones','staff'],ids=selectedItems.map(i=>i.id),allCorrect=needed.every(id=>ids.includes(id))&&selectedItems.every(i=>i.correct),feedback=$('#item-feedback'),btn=$('#btn-check-items');
-    if(allCorrect){playSound('correct');levelScore+=150;levelStars=Math.max(levelStars,1);feedback.innerHTML='<div class="feedback good">✅ Great job! David used his sling, stones, and staff — and trusted God!</div>';btn.textContent='CONTINUE ▶';btn.disabled=false;btn.onclick=()=>{playSound('click');currentChallenge=2;renderChallenge();};$$('.item-card').forEach(c=>c.style.pointerEvents='none');}
-    else{playSound('wrong');mistakes++;levelScore=Math.max(0,levelScore-20);feedback.innerHTML='<div class="feedback bad">Hmm, not quite. David did not need heavy armor or a big sword. Try again!</div>';$$('.item-card.selected').forEach(c=>{if(c.dataset.correct==='false'){c.classList.add('wrong-select');setTimeout(()=>c.classList.remove('wrong-select','selected'),600);}});selectedItems=selectedItems.filter(i=>i.correct);$$('.item-card').forEach(c=>{if(c.dataset.correct==='false')c.classList.remove('selected');});}
-    updateGameHeader();
-  }
-  function renderQuiz(){
-    $('#game-content').innerHTML=`<div class="challenge-box"><h3>📖 Bible Knowledge</h3><p class="instruction">Who did the young shepherd David face?</p><div class="quiz-options" id="quiz-options"><button class="quiz-option" data-correct="false">A. Pharaoh</button><button class="quiz-option" data-correct="true">B. Goliath</button><button class="quiz-option" data-correct="false">C. Jonah</button><button class="quiz-option" data-correct="false">D. Daniel</button></div><div id="quiz-feedback"></div></div>`;
-    $$('.quiz-option').forEach(btn=>btn.addEventListener('click',()=>answerQuiz(btn)));
-  }
-  function answerQuiz(btn){
-    const correct=btn.dataset.correct==='true';$$('.quiz-option').forEach(b=>b.style.pointerEvents='none');
-    if(correct){playSound('correct');btn.classList.add('correct');levelScore+=200;levelStars=Math.max(levelStars,2);$('#quiz-feedback').innerHTML='<div class="feedback good">✅ Yes! David faced the giant Goliath.</div><button class="btn btn-continue" id="btn-quiz-next">CONTINUE ▶</button>';}
-    else{playSound('wrong');btn.classList.add('wrong');mistakes++;levelScore=Math.max(0,levelScore-30);$$('.quiz-option').forEach(b=>{if(b.dataset.correct==='true')b.classList.add('correct');});$('#quiz-feedback').innerHTML='<div class="feedback bad">Not quite. The correct answer is Goliath!</div><button class="btn btn-continue" id="btn-quiz-next">CONTINUE ▶</button>';}
-    updateGameHeader();$('#btn-quiz-next').addEventListener('click',()=>{playSound('click');currentChallenge=3;renderChallenge();});
-  }
-  function renderSling(){
-    hasFired=false;aimAngle=0;
-    $('#game-content').innerHTML=`<div class="challenge-box"><h3>🎯 Help David Aim!</h3><p class="instruction">Use the arrows to aim, then tap FIRE! Aim carefully at Goliath.</p><div class="sling-area"><div class="sling-scene" id="sling-scene"><div class="goliath-target" id="goliath">🧍</div><div class="aim-line" id="aim-line"></div><div class="stone" id="stone"></div><div class="david-slinger">🧒</div></div><div class="aim-controls"><button class="aim-btn" id="aim-left">◀</button><button class="aim-btn fire-btn" id="aim-fire">FIRE!</button><button class="aim-btn" id="aim-right">▶</button></div></div><div id="sling-feedback"></div></div>`;
-    updateAimVisual();$('#aim-left').addEventListener('click',()=>{if(hasFired)return;playSound('click');aimAngle=Math.max(aimAngle-8,-35);updateAimVisual();});$('#aim-right').addEventListener('click',()=>{if(hasFired)return;playSound('click');aimAngle=Math.min(aimAngle+8,35);updateAimVisual();});$('#aim-fire').addEventListener('click',fireSling);
-  }
-  function updateAimVisual(){const line=$('#aim-line');if(line)line.style.transform=`rotate(${aimAngle}deg)`;}
-  function fireSling(){
-    if(hasFired)return;hasFired=true;const stone=$('#stone'),goliath=$('#goliath');if(!stone||!goliath)return;
-    const hit=Math.abs(aimAngle)<=12,tx=80+aimAngle*2.5,ty=-140+Math.abs(aimAngle)*1.5;stone.style.setProperty('--tx',tx+'px');stone.style.setProperty('--ty',ty+'px');stone.classList.add('flying');
-    setTimeout(()=>{if(hit){playSound('correct');goliath.classList.add('hit');levelScore+=250;levelStars=3;$('#sling-feedback').innerHTML='<div class="feedback good">🎉 Bullseye! David trusted God and the stone hit its mark!</div><button class="btn btn-continue" id="btn-sling-next">CONTINUE ▶</button>';}else{playSound('wrong');mistakes++;levelScore=Math.max(0,levelScore+50);$('#sling-feedback').innerHTML='<div class="feedback bad">Almost! Try aiming more toward the center next time. David still trusted God!</div><button class="btn btn-continue" id="btn-sling-next">CONTINUE ▶</button>';}updateGameHeader();$('#btn-sling-next').addEventListener('click',()=>{playSound('click');currentChallenge=4;renderChallenge();});},700);
-  }
-  function renderLesson(){
-    $('#game-content').innerHTML=`<div class="lesson-box"><div class="lesson-emoji">💡</div><h3>Bible Lesson</h3><p>David was not the strongest or biggest person in the army. But he <strong>trusted God</strong>. God helped David, and God can help you too when you trust Him!</p><p>Remember: True courage comes from faith in God.</p><div class="verse-ref">📖 1 Samuel 17</div><button class="btn btn-continue" id="btn-finish" style="margin-top:1.2rem;">FINISH LEVEL 🎉</button></div>`;
-    $('#btn-finish').addEventListener('click',()=>{playSound('click');finishLevel();});
-  }
-  function finishLevel(){
-    if(mistakes===0)levelScore+=100;else if(mistakes<=1)levelScore+=50;
-    if(levelStars<1)levelStars=1;if(levelScore>=500&&levelStars<2)levelStars=2;if(levelScore>=700&&mistakes<=1)levelStars=3;
-    const prevBest=state.scores[currentLevel]||0;if(levelScore>prevBest){state.totalScore=state.totalScore-prevBest+levelScore;state.scores[currentLevel]=levelScore;}
-    const prevStars=state.stars[currentLevel]||0;if(levelStars>prevStars)state.stars[currentLevel]=levelStars;
-    if(state.unlockedLevel<currentLevel+1&&currentLevel<6)state.unlockedLevel=currentLevel+1;
-    const badge=LEVELS[currentLevel].badge;state.badges[badge.id]=true;saveState();playSound('complete');showResults();
-  }
-  function showResults(){
-    showScreen('results');const badge=LEVELS[currentLevel].badge;$('#results-title').textContent='LEVEL COMPLETE!';$('#results-stars').textContent='⭐'.repeat(levelStars)+'☆'.repeat(3-levelStars);$('#results-score-val').textContent=levelScore;$('#badge-name').textContent=badge.name;$('#results-lesson').textContent='You showed courage and learned that trusting God makes us brave!';
-    const nextBtn=$('#btn-next-level');if(currentLevel<6&&state.unlockedLevel>currentLevel){nextBtn.style.display='block';nextBtn.textContent='PLAY NEXT LEVEL';}else if(currentLevel>=6){nextBtn.style.display='block';nextBtn.textContent='ALL LEVELS DONE! 🎉';}else nextBtn.style.display='none';
-  }
-  function renderAchievements(){
-    const grid=$('#badges-grid');if(!grid)return;grid.innerHTML='';BADGES.forEach(b=>{const unlocked=!!state.badges[b.id],div=document.createElement('div');div.className='badge-card'+(unlocked?' unlocked':'');div.innerHTML=`<span class="b-icon">${unlocked?b.icon:'🔒'}</span><span class="b-name">${b.name}</span>`;grid.appendChild(div);});
-    const total=$('#ach-total-score');if(total)total.textContent=state.totalScore;const completed=$('#ach-levels');if(completed)completed.textContent=Object.keys(state.stars).length;let totalStars=0;Object.values(state.stars).forEach(s=>totalStars+=s);const stars=$('#ach-stars');if(stars)stars.textContent=totalStars;
-  }
-  let toastTimer;function showToast(msg){const t=$('#toast');if(!t)return;t.textContent=msg;t.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add('hidden'),2500);}
+  function updateLevelSelect(){$$('.level-card').forEach(card=>{const n=+card.dataset.level,u=n<=state.unlockedLevel;card.classList.toggle('unlocked',u);card.classList.toggle('locked',!u);const st=card.querySelector('.level-status');if(st)st.textContent=u?(state.stars[n]?'✓ PLAY':'PLAY'):'🔒';const se=$(`#stars-${n}`);if(se){const s=state.stars[n]||0;se.textContent='★'.repeat(s)+'☆'.repeat(3-s)}});const t=$('#total-score');if(t)t.textContent=`⭐ ${state.totalScore}`;}
+  function startLevel(n){if(!LEVELS[n])return;currentLevel=n;currentChallenge=0;levelScore=0;levelStars=0;mistakes=0;showScreen('game');updateGameHeader();renderChallenge();}
+  function updateGameHeader(){const total=5,pct=(currentChallenge/total)*100;const p=$('#progress-fill');if(p)p.style.width=pct+'%';const i=$('#challenge-indicator');if(i)i.textContent=`Challenge ${Math.min(currentChallenge+1,total)}/${total}`;if($('#game-score'))$('#game-score').textContent=levelScore;if($('#game-stars'))$('#game-stars').textContent='⭐'+levelStars;}
+  function renderChallenge(){const c=$('#game-content');if(!c)return;c.innerHTML='';const l=LEVELS[currentLevel];switch(currentChallenge){case 0:renderIntro(l);break;case 1:renderItems(l);break;case 2:renderQuiz(l);break;case 3:renderChoice(l);break;case 4:renderLesson(l);break;default:finishLevel();}updateGameHeader();}
+  function renderIntro(l){$('#game-content').innerHTML=`<div class="narrative"><span class="story-emoji">${l.icon}</span><h3>${l.title}</h3><p>${l.intro}</p><p>Complete the challenges, earn stars, and discover the Bible lesson!</p><button class="btn btn-continue" id="continue-intro">LET'S GO! ▶</button></div>`;$('#continue-intro').onclick=()=>{playSound('click');currentChallenge=1;renderChallenge()};}
+  function renderItems(l){const c=$('#game-content');c.innerHTML=`<div class="challenge-box"><h3>🎒 Choose the Story Items</h3><p class="instruction">Tap the items that belong in this Bible story.</p><div class="items-grid" id="items-grid"></div><div id="item-feedback"></div><button class="btn btn-continue" id="check-items" disabled>CHECK SELECTION</button></div>`;const grid=$('#items-grid'),selected=[];l.items.forEach(it=>{const d=document.createElement('div');d.className='item-card';d.innerHTML=`<span class="item-emoji">${it[1]}</span>${it[2]}`;d.dataset.correct=it[3];d.onclick=()=>{playSound('click');d.classList.toggle('selected');const idx=selected.indexOf(d);if(idx>=0)selected.splice(idx,1);else selected.push(d);$('#check-items').disabled=!selected.length};grid.appendChild(d)});$('#check-items').onclick=()=>{const good=selected.length===l.items.filter(x=>x[3]).length&&selected.every(x=>x.dataset.correct==='1');if(good){playSound('correct');levelScore+=150;levelStars=Math.max(levelStars,1);$('#item-feedback').innerHTML='<div class="feedback good">✅ Excellent! You chose the right story items.</div>';$('#check-items').textContent='CONTINUE ▶';$('#check-items').onclick=()=>{currentChallenge=2;renderChallenge()};$$('.item-card').forEach(x=>x.style.pointerEvents='none')}else{playSound('wrong');mistakes++;levelScore=Math.max(0,levelScore-20);$('#item-feedback').innerHTML='<div class="feedback bad">Try again. Think about what belongs to this Bible story.</div>';selected.slice().forEach(x=>{if(x.dataset.correct==='0'){x.classList.remove('selected');const i=selected.indexOf(x);if(i>=0)selected.splice(i,1)}})}updateGameHeader()};}
+  function renderQuiz(l){const q=l.quiz;$('#game-content').innerHTML=`<div class="challenge-box"><h3>📖 Bible Knowledge</h3><p class="instruction">${q[0]}</p><div class="quiz-options" id="quiz-options"></div><div id="quiz-feedback"></div></div>`;q[1].forEach((a,i)=>{const b=document.createElement('button');b.className='quiz-option';b.textContent=String.fromCharCode(65+i)+'. '+a;b.onclick=()=>answerChoice(b,i===q[2],'quiz');$('#quiz-options').appendChild(b)});}
+  function renderChoice(l){const q=l.choice;$('#game-content').innerHTML=`<div class="challenge-box"><h3>💡 Faith Challenge</h3><p class="instruction">${q[0]}</p><div class="quiz-options" id="choice-options"></div><div id="choice-feedback"></div></div>`;q[1].forEach((a,i)=>{const b=document.createElement('button');b.className='quiz-option';b.textContent=String.fromCharCode(65+i)+'. '+a;b.onclick=()=>answerChoice(b,i===q[2],'choice') ;$('#choice-options').appendChild(b)});}
+  function answerChoice(btn,correct,type){const container=type==='quiz'?$('#quiz-options'):$('#choice-options');container.querySelectorAll('button').forEach(b=>b.style.pointerEvents='none');const feedback=type==='quiz'?$('#quiz-feedback'):$('#choice-feedback');if(correct){btn.classList.add('correct');playSound('correct');levelScore+=200;levelStars=Math.max(levelStars,2);feedback.innerHTML='<div class="feedback good">✅ Correct! Great Bible knowledge.</div>';}else{btn.classList.add('wrong');playSound('wrong');mistakes++;levelScore=Math.max(0,levelScore-30);container.querySelectorAll('button').forEach(b=>{if(b!==btn&&b.dataset.answer==='correct')b.classList.add('correct')});feedback.innerHTML='<div class="feedback bad">Not quite. Keep learning from the story!</div>';}container.querySelectorAll('button').forEach((b,i)=>{if((type==='quiz'?LEVELS[currentLevel].quiz[2]:LEVELS[currentLevel].choice[2])===i)b.dataset.answer='correct'});feedback.innerHTML += `<button class="btn btn-continue" id="next-answer">CONTINUE ▶</button>`;updateGameHeader();$('#next-answer').onclick=()=>{playSound('click');currentChallenge=type==='quiz'?3:4;renderChallenge()};}
+  function renderLesson(l){levelStars=3;$('#game-content').innerHTML=`<div class="lesson-box"><div class="lesson-emoji">💡</div><h3>Bible Lesson</h3><p>${l.lesson}</p><p><strong>Great job, Bible Hero!</strong> Keep learning, trusting God, and putting His Word into practice.</p><div class="verse-ref">📖 Bible Story Reference</div><button class="btn btn-continue" id="finish-level">FINISH LEVEL 🎉</button></div>`;$('#finish-level').onclick=()=>{playSound('click');finishLevel()};}
+  function finishLevel(){if(mistakes===0)levelScore+=100;else if(mistakes<=1)levelScore+=50;if(levelScore>=500)levelStars=Math.max(levelStars,2);if(mistakes===0&&levelScore>=700)levelStars=3;levelStars=Math.max(1,Math.min(3,levelStars));const prev=state.scores[currentLevel]||0;if(levelScore>prev){state.totalScore=state.totalScore-prev+levelScore;state.scores[currentLevel]=levelScore}state.stars[currentLevel]=Math.max(state.stars[currentLevel]||0,levelStars);if(currentLevel<10)state.unlockedLevel=Math.max(state.unlockedLevel,currentLevel+1);state.badges[LEVELS[currentLevel].badge.id]=true;saveState();playSound('complete');showResults();}
+  function showResults(){showScreen('results');const l=LEVELS[currentLevel];$('#results-title').textContent='LEVEL COMPLETE!';$('#results-stars').textContent='⭐'.repeat(levelStars)+'☆'.repeat(3-levelStars);$('#results-score-val').textContent=levelScore;$('#badge-name').textContent=l.badge.name;$('#results-lesson').textContent=`You completed ${l.title} and learned a valuable Bible lesson!`;const b=$('#btn-next-level');if(currentLevel<10){b.style.display='block';b.textContent='PLAY NEXT LEVEL'}else{b.style.display='block';b.textContent='ALL 10 LEVELS COMPLETE! 🎉'}}
+  function renderAchievements(){const g=$('#badges-grid');if(!g)return;g.innerHTML='';BADGES.forEach(b=>{const u=!!state.badges[b.id],d=document.createElement('div');d.className='badge-card'+(u?' unlocked':'');d.innerHTML=`<span class="b-icon">${u?b.icon:'🔒'}</span><span class="b-name">${b.name}</span>`;g.appendChild(d)});$('#ach-total-score').textContent=state.totalScore;$('#ach-levels').textContent=Object.keys(state.stars).length;$('#ach-stars').textContent=Object.values(state.stars).reduce((a,b)=>a+b,0);}
+  let toastTimer;function showToast(msg){const t=$('#toast');if(!t)return;t.textContent=msg;t.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add('hidden'),2500)}
   document.addEventListener('DOMContentLoaded',init);
 })();

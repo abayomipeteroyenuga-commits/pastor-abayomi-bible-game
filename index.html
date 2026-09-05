@@ -1,120 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#081a3a">
-  <meta name="description" content="PastorAbayomiBibleStories — Bible Heroes Adventure. Play, learn and grow in God's Word.">
-  <title>PastorAbayomiBibleStories | Bible Heroes Adventure</title>
-  <link rel="icon" href="assets/logo.png">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Super Kingdom Adventure</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#111;font-family:Arial,sans-serif;touch-action:none;-webkit-user-select:none;user-select:none}
+#game{display:block;width:min(100vw,1100px);height:100dvh;min-height:320px;margin:0 auto;image-rendering:auto;background:#76c9ff;filter:saturate(1.08) contrast(1.03);touch-action:none}
+#hud{position:fixed;left:10px;right:10px;top:8px;color:#fff;font-weight:800;text-shadow:2px 2px #17202a;display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:6px 10px;z-index:5;font-size:clamp(11px,1.55vw,18px);pointer-events:none}#hud>*{pointer-events:auto}
+#message{position:fixed;left:50%;top:12%;width:min(94vw,900px);transform:translateX(-50%);color:#fff;font-weight:900;font-size:clamp(18px,4vw,28px);text-align:center;text-shadow:3px 3px #17202a;pointer-events:none;z-index:6}
+#touch{position:fixed;inset:auto 0 max(10px,env(safe-area-inset-bottom)) 0;display:flex;justify-content:space-between;padding:0 max(10px,env(safe-area-inset-left)) 0 max(10px,env(safe-area-inset-right));z-index:7;pointer-events:none}.pad{display:flex;gap:clamp(5px,1.5vw,12px);pointer-events:auto}.btn{width:clamp(46px,9vw,64px);height:clamp(46px,9vw,64px);border:0;border-radius:clamp(12px,2.5vw,18px);background:#ffffffb8;font-size:clamp(20px,4vw,28px);font-weight:900;box-shadow:0 5px 0 #0004;touch-action:none;-webkit-tap-highlight-color:transparent}
+#start{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 28%,#3f68a8 0,#172846 35%,#080d18 76%);z-index:10;color:#fff}
+#start:before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 43%,#74d7ff18 44% 45%,transparent 46% 100%),radial-gradient(circle at 15% 20%,#ffd85a22 0 2px,transparent 3px),radial-gradient(circle at 78% 15%,#fff5 0 1px,transparent 2px);background-size:auto,90px 90px,70px 70px;animation:skyDrift 12s linear infinite;pointer-events:none}
+#start .panel{position:relative;width:min(920px,92vw);max-width:920px;min-height:min(620px,88vh);margin:18px;padding:clamp(24px,5vw,52px);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:2px solid #f8d36a88;border-radius:32px;background:linear-gradient(180deg,#101d34ee,#0b1324f5);box-shadow:0 28px 90px #000b,inset 0 0 55px #68cfff12;overflow:hidden}
+#start .panel:before,#start .panel:after{content:'';position:absolute;bottom:-30px;width:240px;height:230px;background:linear-gradient(#263f63,#101a2d);clip-path:polygon(0 100%,18% 42%,34% 64%,52% 20%,69% 61%,84% 37%,100% 100%);opacity:.72}
+#start .panel:before{left:-45px}#start .panel:after{right:-45px;transform:scaleX(-1)}
+.startBrand{position:relative;z-index:1;font-size:clamp(10px,1.5vw,14px);font-weight:900;letter-spacing:3px;color:#f8d36a;margin-bottom:12px}
+.startCrest{position:relative;z-index:1;width:76px;height:76px;display:grid;place-items:center;margin-bottom:9px;border:2px solid #f8d36a;border-radius:50%;font-size:38px;background:radial-gradient(circle,#315b91,#101b30 72%);box-shadow:0 0 30px #69d8ff55,0 0 0 7px #ffffff0c}
+.panel h1{position:relative;z-index:1;margin:0;font-size:clamp(38px,7vw,70px);line-height:.92;letter-spacing:-2px;color:#fff;text-shadow:0 4px 0 #20395e,0 8px 22px #000;max-width:760px}
+.startMission{position:relative;z-index:1;margin:16px 0 8px;padding:7px 17px;border:1px solid #f8d36a77;border-radius:999px;font-weight:1000;font-size:clamp(13px,2.3vw,18px);letter-spacing:2px;color:#ffd85a;background:#0005}
+.startStory{position:relative;z-index:1;max-width:660px;color:#dce9f8!important;font-size:clamp(13px,2vw,17px);line-height:1.55!important;margin:8px auto 16px!important}
+.startQuest{position:relative;z-index:1;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:2px 0 20px}.startQuest span{padding:6px 10px;border-radius:9px;background:#ffffff0d;border:1px solid #ffffff18;font-size:12px;font-weight:800;color:#bcd7f4}
+#play{position:relative;z-index:1;border:1px solid #fff5;border-radius:15px;padding:15px 34px;font-size:clamp(16px,3vw,21px);font-weight:1000;letter-spacing:1px;cursor:pointer;color:#241b0b;background:linear-gradient(#ffe77a,#f0b92e);box-shadow:0 7px 0 #9a6413,0 12px 28px #0008;touch-action:manipulation;transition:transform .15s,filter .15s}#play:hover{filter:brightness(1.08);transform:translateY(-2px)}#play:active{transform:translateY(4px);box-shadow:0 3px 0 #9a6413}
+@keyframes skyDrift{to{background-position:180px 0,90px 90px,70px 70px}}
+.hudbtn{border:0;border-radius:10px;background:#ffffffaa;font-weight:900;padding:2px 8px;cursor:pointer}
+@media(max-width:700px){#hud{gap:4px 7px;top:5px;left:6px;right:6px}.hudbtn{padding:3px 6px}#start .panel{min-height:0;border-radius:22px;padding:26px 18px}.startCrest{width:58px;height:58px;font-size:29px}.startQuest{margin-bottom:14px}}@media(max-width:480px){#hud{font-size:10px;gap:3px 5px}.hudbtn{font-size:12px}.btn{box-shadow:0 3px 0 #0004}.startQuest span:nth-child(3){display:none}}
+
+#missionBubble{position:fixed;left:clamp(14px,4vw,52px);bottom:clamp(105px,18vh,165px);width:min(430px,88vw);z-index:8;display:none;pointer-events:auto;filter:drop-shadow(0 10px 24px #0007)}
+#missionBubble.show{display:block;animation:bubbleIn .24s ease-out}
+#missionBubble .bubbleCard{position:relative;background:#fffdf4;border:4px solid #251b16;border-radius:24px;padding:15px 44px 15px 18px;color:#251b16;box-shadow:inset 0 0 0 3px #f4c84c}
+#missionBubble .bubbleCard:after{content:'';position:absolute;left:34px;bottom:-25px;border-width:25px 22px 0 0;border-style:solid;border-color:#251b16 transparent transparent transparent}
+#missionBubble .bubbleCard:before{content:'';position:absolute;left:38px;bottom:-16px;z-index:1;border-width:18px 16px 0 0;border-style:solid;border-color:#fffdf4 transparent transparent transparent}
+#missionBubble .speaker{font-size:12px;font-weight:1000;letter-spacing:1.6px;color:#8a4f13;margin-bottom:3px}
+#missionBubble .missionTitle{font-size:clamp(16px,3.5vw,21px);font-weight:1000;line-height:1.1;margin-bottom:6px}
+#missionBubble .missionText{font-size:clamp(13px,3vw,16px);font-weight:800;line-height:1.35}
+#missionBubble .closeBubble{position:absolute;right:10px;top:8px;border:0;background:#251b16;color:#fff;width:28px;height:28px;border-radius:50%;font-size:16px;font-weight:900;cursor:pointer}
+@keyframes bubbleIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
+@media(max-width:600px){#missionBubble{bottom:110px;left:10px}#missionBubble .bubbleCard{border-width:3px;padding:12px 40px 12px 14px}}
+</style>
 </head>
 <body>
-  <div class="world-glow"></div>
+<canvas id="game"></canvas>
+<div id="hud"><button id="audioBtn" class="hudbtn">🔊</button><span>⏱ <b id="timer">3:00</b></span><span>❤️ <b id="lives">3</b></span><span>🪙 <b id="coins">0</b></span><span>⭐ <b id="stars">0</b></span><span>💰 <b id="score">0</b></span><span>WORLD <b id="world">1/20</b></span><span>POWER <b id="power">SMALL</b></span><span>🛡 <b id="shield">0</b>s</span><button id="pauseBtn" class="hudbtn">⏸</button></div>
+<div id="message"></div>
+<div id="missionBubble" aria-live="polite"><div class="bubbleCard"><button id="closeMissionBubble" class="closeBubble" aria-label="Close mission">×</button><div class="speaker">ETHAN • KINGDOM MISSION</div><div id="missionBubbleTitle" class="missionTitle"></div><div id="missionBubbleText" class="missionText"></div></div></div>
 
-  <!-- HOME -->
-  <section id="screen-home" class="screen active">
-    <div class="home-world">
-      <div class="cloud cloud-a">☁️</div><div class="cloud cloud-b">☁️</div><div class="cloud cloud-c">☁️</div>
-      <div class="mountain mountain-a"></div><div class="mountain mountain-b"></div>
-      <div class="sun-orb">☀️</div>
-      <div class="home-topbar">
-        <div class="mini-brand"><img src="assets/logo.png" alt="Pastor Abayomi Bible Stories"></div>
-        <div class="top-stats"><span class="hud-pill">⭐ <b id="home-score">0</b></span><span class="hud-pill">🏆 <b id="home-badges">0</b></span><button class="round-btn" id="btn-sound" aria-label="Toggle sound">🔊</button></div>
-      </div>
-      <main class="home-hero">
-        <div class="hero-character" aria-hidden="true"><div class="cape">🧒</div><div class="hero-shadow"></div></div>
-        <div class="hero-copy">
-          <div class="eyebrow">✦ PASTOR ABAYOMI BIBLE STORIES ✦</div>
-          <h1>BIBLE HEROES<br><span>ADVENTURE</span></h1>
-          <div class="ribbon">10 LEVELS • FAITH • FUN • ADVENTURE</div>
-          <p>Travel through amazing Bible stories, complete challenges, earn stars and become a Bible Hero!</p>
-          <button class="btn btn-play mega" id="btn-play"><span>▶</span> PLAY ADVENTURE</button>
-          <div class="home-actions">
-            <button class="icon-action" id="btn-howto"><span>📖</span>HOW TO PLAY</button>
-            <button class="icon-action" id="btn-stories"><span>🗺️</span>STORIES</button>
-            <button class="icon-action" id="btn-achievements"><span>🏆</span>BADGES</button>
-            <button class="icon-action" id="btn-parent"><span>👨‍👩‍👧</span>PARENTS</button>
-          </div>
-        </div>
-      </main>
-      <div class="home-verse">“Be strong and courageous. Do not be afraid.” <b>Joshua 1:9</b></div>
-      <div class="home-ground"><span>🌿</span><span>🌿</span><span>🌿</span><span>🌿</span><span>🌿</span></div>
-    </div>
-  </section>
-
-  <!-- LEVEL MAP -->
-  <section id="screen-levels" class="screen">
-    <div class="map-world">
-      <header class="screen-header game-nav">
-        <button class="btn-back" data-goto="home">← HOME</button>
-        <div class="header-title"><small>YOUR JOURNEY</small><h2>BIBLE ADVENTURE MAP</h2></div>
-        <div class="header-stats"><span class="hud-pill">⭐ <b id="total-score">⭐ 0</b></span></div>
-      </header>
-      <div class="map-intro"><span>🧭</span><div><b>Choose your next adventure!</b><small>Complete a level to unlock the next Bible story.</small></div></div>
-      <div class="levels-container">
-        <div class="map-road"></div>
-        <div class="level-card unlocked" data-level="1"><div class="level-num">1</div><div class="level-icon">🏹</div><h3>David & Goliath</h3><p>Big God, Small Boy</p><div class="level-stars" id="stars-1">☆☆☆</div><span class="level-status">PLAY</span></div>
-        <div class="level-card locked" data-level="2"><div class="level-num">2</div><div class="level-icon">🏰</div><h3>Walls of Jericho</h3><p>Obey God's Word</p><div class="level-stars" id="stars-2">☆☆☆</div><span class="level-status">🔒</span></div>
-        <div class="level-card locked" data-level="3"><div class="level-num">3</div><div class="level-icon">🌈</div><h3>Joseph's Dreams</h3><p>God Has a Purpose</p><div class="level-stars" id="stars-3">☆☆☆</div><span class="level-status">🔒</span></div>
-        <div class="level-card locked" data-level="4"><div class="level-num">4</div><div class="level-icon">🔥</div><h3>Three Hebrew Boys</h3><p>Faith Under Fire</p><div class="level-stars" id="stars-4">☆☆☆</div><span class="level-status">🔒</span></div>
-        <div class="level-card locked" data-level="5"><div class="level-num">5</div><div class="level-icon">🦁</div><h3>Daniel's Lions' Den</h3><p>Pray & Trust God</p><div class="level-stars" id="stars-5">☆☆☆</div><span class="level-status">🔒</span></div>
-        <div class="level-card locked" data-level="6"><div class="level-num">6</div><div class="level-icon">🐋</div><h3>Jonah & The Fish</h3><p>Obey God's Call</p><div class="level-stars" id="stars-6">☆☆☆</div><span class="level-status">🔒</span></div>
-        <div class="level-card locked" data-level="7"><div class="level-num">7</div><div class="level-icon">🛶</div><h3>Noah & The Ark</h3><p>Walk in Obedience</p><div class="level-stars" id="stars-7">☆☆☆</div><span class="level-status">🔒</span></div>
-        <div class="level-card locked" data-level="8"><div class="level-num">8</div><div class="level-icon">🌊</div><h3>Moses & Red Sea</h3><p>God Makes a Way</p><div class="level-stars" id="stars-8">☆☆☆</div><span class="level-status">🔒</span></div>
-        <div class="level-card locked" data-level="9"><div class="level-num">9</div><div class="level-icon">👑</div><h3>Esther's Courage</h3><p>Brave for Others</p><div class="level-stars" id="stars-9">☆☆☆</div><span class="level-status">🔒</span></div>
-        <div class="level-card locked final-level" data-level="10"><div class="level-num">10</div><div class="level-icon">⭐</div><h3>Birth of Jesus</h3><p>The Greatest Gift</p><div class="level-stars" id="stars-10">☆☆☆</div><span class="level-status">🔒</span></div>
-      </div>
-      <div class="map-footer">🏅 <b>10 Bible Heroes</b> • <b>30 Stars</b> • <b>One Amazing Journey</b></div>
-    </div>
-  </section>
-
-  <!-- GAME -->
-  <section id="screen-game" class="screen">
-    <div class="game-world">
-      <header class="game-header">
-        <button class="btn-back game-quit" id="btn-quit-level">✕ QUIT</button>
-        <div class="game-progress"><div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div><span id="challenge-indicator">Challenge 1/5</span></div>
-        <div class="game-score"><span class="hud-pill">⭐ <b id="game-score">0</b></span><span class="hud-pill">🏅 <b id="game-stars">⭐0</b></span></div>
-      </header>
-      <div class="game-stage-decor"><span>☁️</span><span>✨</span><span>☁️</span></div>
-      <main id="game-content" class="game-content"></main>
-    </div>
-  </section>
-
-  <!-- RESULTS -->
-  <section id="screen-results" class="screen">
-    <div class="results-world">
-      <div class="confetti-layer">✦ ✧ ★ ✦ ✧ ★ ✦</div>
-      <div class="results-content">
-        <div class="results-medal">🏆</div>
-        <div class="results-celebration" id="results-celebration">🎉</div>
-        <div class="eyebrow">MISSION ACCOMPLISHED</div>
-        <h2 id="results-title">LEVEL COMPLETE!</h2>
-        <div class="results-stars" id="results-stars">⭐⭐⭐</div>
-        <div class="score-card"><small>YOUR SCORE</small><strong id="results-score-val">0</strong><span>POINTS</span></div>
-        <div class="badge-earned" id="badge-earned"><span class="badge-icon">🏅</span><span><small>BADGE UNLOCKED</small><b id="badge-name">DAVID THE BRAVE</b></span></div>
-        <p class="results-lesson" id="results-lesson"></p>
-        <div class="results-buttons"><button class="btn btn-play" id="btn-next-level">PLAY NEXT LEVEL</button><button class="btn btn-secondary" id="btn-replay">↻ PLAY AGAIN</button><button class="btn btn-secondary" id="btn-results-home">⌂ HOME</button></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW TO -->
-  <section id="screen-howto" class="screen"><div class="simple-world"><div class="screen-header game-nav"><button class="btn-back" data-goto="home">← HOME</button><div class="header-title"><small>START HERE</small><h2>HOW TO PLAY</h2></div></div><div class="info-content guide-grid"><div class="info-card"><div class="big-icon">🎮</div><h3>PLAY</h3><p>Choose a Bible story and complete the challenges inside each level.</p></div><div class="info-card"><div class="big-icon">⭐</div><h3>EARN</h3><p>Answer questions, complete action missions and collect stars and points.</p></div><div class="info-card"><div class="big-icon">🔓</div><h3>UNLOCK</h3><p>Finish one adventure to unlock the next story on the map.</p></div><div class="info-card"><div class="big-icon">📖</div><h3>LEARN</h3><p>Every level ends with a Bible lesson and Scripture reference.</p></div><button class="btn btn-play" data-goto="home">LET'S GO! ▶</button></div></div></section>
-
-  <!-- STORIES -->
-  <section id="screen-stories" class="screen"><div class="simple-world"><div class="screen-header game-nav"><button class="btn-back" data-goto="home">← HOME</button><div class="header-title"><small>THE JOURNEY</small><h2>BIBLE STORIES</h2></div></div><div class="info-content story-list">
-    <div class="story-card"><span class="story-icon">🏹</span><div><h3>David & Goliath</h3><p>Faith and courage when facing a giant. <b>1 Samuel 17</b></p></div></div><div class="story-card"><span class="story-icon">🏰</span><div><h3>Walls of Jericho</h3><p>Obedience and trust in God's instructions. <b>Joshua 6</b></p></div></div><div class="story-card"><span class="story-icon">🌈</span><div><h3>Joseph's Dreams</h3><p>Patience, forgiveness and God's purpose. <b>Genesis 37–50</b></p></div></div><div class="story-card"><span class="story-icon">🔥</span><div><h3>Three Hebrew Boys</h3><p>Standing firm in faith. <b>Daniel 3</b></p></div></div><div class="story-card"><span class="story-icon">🦁</span><div><h3>Daniel in the Lions' Den</h3><p>Faithful prayer under pressure. <b>Daniel 6</b></p></div></div><div class="story-card"><span class="story-icon">🐋</span><div><h3>Jonah and the Great Fish</h3><p>Obedience, repentance and mercy. <b>Jonah 1–4</b></p></div></div><div class="story-card"><span class="story-icon">🛶</span><div><h3>Noah and the Ark</h3><p>Faith and obedience. <b>Genesis 6–9</b></p></div></div><div class="story-card"><span class="story-icon">🌊</span><div><h3>Moses and the Red Sea</h3><p>God makes a way for His people. <b>Exodus 14</b></p></div></div><div class="story-card"><span class="story-icon">👑</span><div><h3>Esther's Courage</h3><p>Wisdom and courage to help others. <b>Esther 4–7</b></p></div></div><div class="story-card"><span class="story-icon">⭐</span><div><h3>The Birth of Jesus</h3><p>Good news, hope and great joy. <b>Luke 2:1–20</b></p></div></div>
-    <button class="btn btn-play" data-goto="levels">OPEN ADVENTURE MAP 🗺️</button></div></div></section>
-
-  <!-- ACHIEVEMENTS -->
-  <section id="screen-achievements" class="screen"><div class="simple-world"><div class="screen-header game-nav"><button class="btn-back" data-goto="home">← HOME</button><div class="header-title"><small>YOUR COLLECTION</small><h2>HERO BADGES</h2></div></div><div class="info-content"><p class="ach-intro">Collect all 10 Bible Hero badges!</p><div class="badges-grid" id="badges-grid"></div><div class="stats-box"><div><span>⭐</span><b id="ach-total-score">0</b><small>TOTAL SCORE</small></div><div><span>🗺️</span><b><strong id="ach-levels">0</strong> / 10</b><small>LEVELS</small></div><div><span>★</span><b><strong id="ach-stars">0</strong> / 30</b><small>STARS</small></div></div><button class="btn btn-play" data-goto="home">BACK HOME</button></div></div></section>
-
-  <!-- PARENTS -->
-  <section id="screen-parent" class="screen"><div class="simple-world"><div class="screen-header game-nav"><button class="btn-back" data-goto="home">← HOME</button><div class="header-title"><small>FAMILY ZONE</small><h2>PARENTS & TEACHERS</h2></div></div><div class="info-content guide-grid"><div class="info-card"><div class="big-icon">📖</div><h3>WHAT CHILDREN LEARN</h3><p>Bible knowledge, faith, courage, obedience, prayer, wisdom, forgiveness and Christian values.</p></div><div class="info-card"><div class="big-icon">🛡️</div><h3>CHILD-FRIENDLY DESIGN</h3><p>No ads or in-game purchases. Progress is saved locally on the device.</p></div><div class="info-card"><div class="big-icon">💬</div><h3>PLAY TOGETHER</h3><p>Ask children to retell each story and talk about how they can apply the lesson.</p></div><div class="info-card"><div class="big-icon">🌐</div><h3>PASTOR ABAYOMI BIBLE STORIES</h3><p>Bringing the Bible to life through amazing stories, games and interactive learning.</p></div><button class="btn btn-play" data-goto="home">BACK HOME</button></div></div></section>
-
-  <div id="toast" class="toast hidden"></div>
-  <script src="script.js"></script>
+<div id="start"><div class="panel"><div class="startBrand">ETHAN DIGITAL ACADEMY PRESENTS</div><div class="startCrest">⚔️</div><h1>SUPER KINGDOM<br>ADVENTURE</h1><div class="startMission">MISSION • RESCUE FEDORA</div><p class="startStory">Twenty kingdoms stand between Ethan and Fedora. Cross enchanted lands, master new powers, defeat the armored Kingdom Guardians, and break through the Ultimate Kingdom.</p><div class="startQuest"><span>🌍 20 KINGDOMS</span><span>👑 20 GUARDIANS</span><span>⭐ POWER-UPS</span><span>🏆 FINAL RESCUE</span></div><button id="play">⚔ BEGIN MISSION</button></div></div>
+<div id="touch"><div class="pad"><button class="btn" data-k="left">◀</button><button class="btn" data-k="right">▶</button></div><div class="pad"><button class="btn" data-k="jump">⬆</button><button class="btn" data-k="crouch">⬇</button><button class="btn" data-k="dash">⚡</button><button class="btn" data-k="fire">🔥</button><button class="btn" data-k="shop">🛒</button></div></div>
+<script src="game.js"></script>
 </body>
 </html>
